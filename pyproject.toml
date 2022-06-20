@@ -7,6 +7,8 @@ authors = ["ProtKsen <protcenko.kseniya@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^1.9.1"
+mypy = "^0.961"
+flake8 = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
 
