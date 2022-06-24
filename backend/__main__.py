@@ -1,9 +1,13 @@
+import logging
+
 from backend.app import create_app
-from backend.config import config
+
+logger = logging.getLogger(__name__)
 
 
 def main():
-    app = create_app()
+    logging.basicConfig(level=logging.DEBUG)
+    logger.info('start app')
 
     app.run(
         port=config.server.port,
