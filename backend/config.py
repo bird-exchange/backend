@@ -45,4 +45,10 @@ def load_from_env() -> AppConfig:
     )
 
 
-config = load_from_env()
+def get_config(test_config=False) -> AppConfig:
+    if not test_config:
+        return load_from_env()
+    test_config = load_from_env()
+    db_url = os.environ['TEST_DB_URL']
+    test_config.db.url = db_url
+    return test_config

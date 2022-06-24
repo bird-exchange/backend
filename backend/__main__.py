@@ -9,9 +9,10 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
     logger.info('start app')
 
+    app = create_app()
     app.run(
-        port=config.server.port,
-        host=config.server.host,
+        port=app.config['APP_PORT'],
+        host=app.config['APP_HOST'],
         debug=False
     )
     return app
