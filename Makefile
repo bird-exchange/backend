@@ -11,3 +11,7 @@ lint:
 
 test:
 	@python -m pytest tests/
+
+test.coverage:
+	@coverage run -m pytest
+	@coverage report
