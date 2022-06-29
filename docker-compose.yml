@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+
+  test_db:
+    image: postgres:14
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+    networks:
+      - backend
+
+  webapp:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
+networks:
+  backend:
