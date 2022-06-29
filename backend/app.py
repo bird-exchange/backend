@@ -1,6 +1,11 @@
 from flask import Flask
-from backend.views import image, task, upload
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
 from backend.config import get_config
+from backend.db import Base
+from backend.models import DataImage
+from backend.views import image, task, upload
 
 
 def create_app(test_config=None):
@@ -14,6 +19,11 @@ def create_app(test_config=None):
         APP_PORT=config.server.port,
         APP_HOST=config.server.host
     )
+
+    engine = create_engine(app.config['DATABASE_URL'])
+    db_session = scoped_session(sessionmaker(bind=engine))
+    Base.query = db_session.query_property()
+    Base.metadata.create_all(bind=engine)
 
     app.register_blueprint(image.view, url_prefix='/api/v1/image')
     app.register_blueprint(task.view, url_prefix='/api/v1/task')
