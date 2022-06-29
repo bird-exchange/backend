@@ -4,7 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from backend.config import get_config
 from backend.db import Base
-from backend.models import DataImage
+from backend.models import Image
 from backend.views import image, task, upload
 
 
