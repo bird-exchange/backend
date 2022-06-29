@@ -1,6 +1,12 @@
-from flask import Blueprint
+from http import HTTPStatus
+
+from flask import Blueprint, jsonify
+
+from backend import schemas
+from backend.repos.images import ImageRepo
 
 view = Blueprint('images', __name__)
+image_repo = ImageRepo()
 
 
 @view.post('/')
@@ -10,7 +16,9 @@ def add_image():
 
 @view.get('/')
 def get_all_image():
-    pass
+    entities = image_repo.get_all()
+    images = [schemas.Image.from_orm(entity).dict() for entity in entities]
+    return jsonify(images), HTTPStatus.OK
 
 
 @view.get('/<uid>')
