@@ -1,7 +1,5 @@
-from typing import Optional
-
 from pydantic import BaseModel
-
+from typing import Optional
 
 class Schema(BaseModel):
 
@@ -12,6 +10,7 @@ class Schema(BaseModel):
 class Image(Schema):
     uid: int
     name: str
-    path: str
-    obj_number: Optional[int]
-    was_recognized: Optional[int]
+    path_original: Optional[str]
+    path_result: Optional[str]
+    type: int
+    was_fitted: Optional[int]

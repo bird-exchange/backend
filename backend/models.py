@@ -8,9 +8,10 @@ class Image(Base):
 
     uid = Column(Integer, primary_key=True)
     name = Column(String(), unique=True, nullable=False)
-    path = Column(String(), nullable=False)
-    obj_number = Column(Integer, default=-1)
-    was_recognized = Column(Integer, default=0)
+    path_original = Column(String(), default='')
+    path_result = Column(String(), default='')
+    type = Column(Integer)
+    was_fitted = Column(Integer, default=0)
 
     def __str__(self) -> str:
         return 'Image {uid}, {name}'.format(
