@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from backend import schemas
 from backend.repos.images import ImageRepo
@@ -11,7 +11,14 @@ image_repo = ImageRepo()
 
 @view.post('/')
 def add_image():
-    pass
+    image_data = request.json
+    image_data['uid'] = -1
+    image_data = schemas.Image(**image_data)
+
+    entity = image_repo.add_image(image_data.name, image_data.type)
+    new_image = schemas.Image.from_orm(entity)
+
+    return new_image.dict(), HTTPStatus.CREATED
 
 
 @view.get('/')
