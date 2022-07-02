@@ -26,3 +26,11 @@ class ImageRepo():
         if not image:
             raise NotFoundError(self.name)
         return image
+
+    def delete_all(self) -> None:
+        db_session = get_db_session()
+        entities = Image.query.all()
+        for entity in entities:
+            local_object = db_session.merge(entity)
+            db_session.delete(local_object)
+            db_session.commit()

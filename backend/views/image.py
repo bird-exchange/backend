@@ -37,7 +37,8 @@ def get_by_id_image(uid: int):
 
 @view.delete('/')
 def delete_all_image():
-    pass
+    image_repo.delete_all()
+    return {}, HTTPStatus.NO_CONTENT
 
 
 @view.delete('/<uid>')
