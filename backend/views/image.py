@@ -29,8 +29,10 @@ def get_all_image():
 
 
 @view.get('/<uid>')
-def get_image(uid: int):
-    pass
+def get_by_id_image(uid: int):
+    entity = image_repo.get_by_id(uid)
+    image = schemas.Image.from_orm(entity)
+    return image.dict(), HTTPStatus.OK
 
 
 @view.delete('/')

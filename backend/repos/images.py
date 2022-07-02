@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 from backend.db import get_db_session
 from backend.models import Image
-from backend.errors import ConflictError
+from backend.errors import ConflictError, NotFoundError
 
 
 class ImageRepo():
@@ -20,3 +20,9 @@ class ImageRepo():
 
     def get_all(self) -> list[Image]:
         return Image.query.all()
+
+    def get_by_id(self, uid: int) -> Image:
+        image = Image.query.filter(Image.uid == uid).first()
+        if not image:
+            raise NotFoundError(self.name)
+        return image
