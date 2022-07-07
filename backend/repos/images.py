@@ -40,3 +40,22 @@ class ImageRepo():
         entity = Image.query.filter(Image.uid == uid).first()
         db_session.delete(entity)
         db_session.commit()
+
+    def update_by_id(self, uid: int, name: str, path_original: str,
+                     path_result: str, type: int, was_fitted: int
+                     ) -> Image:
+        image = Image.query.filter(Image.uid == uid).first()
+        if not image:
+            raise NotFoundError(self.name)
+        try:
+            db_session = get_db_session()
+            local_image = db_session.merge(image)
+            local_image.name = name
+            local_image.path_original = path_original
+            local_image.path_result = path_result
+            local_image.type = type
+            local_image.was_fitted = was_fitted
+            db_session.commit()
+        except IntegrityError:
+            ConflictError(self.name)
+        return local_image

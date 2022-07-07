@@ -48,5 +48,10 @@ def delete_by_id_image(uid: int):
 
 
 @view.put('/<uid>')
-def update_image():
-    pass
+def update_by_id_image(uid):
+    payload = request.json
+    payload['uid'] = int(uid)
+    image = schemas.Image(**payload)
+    entity = image_repo.update_by_id(**image.dict())
+    new_image = schemas.Image.from_orm(entity)
+    return new_image.dict(), HTTPStatus.OK
