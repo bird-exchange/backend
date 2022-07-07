@@ -34,3 +34,9 @@ class ImageRepo():
             local_object = db_session.merge(entity)
             db_session.delete(local_object)
             db_session.commit()
+
+    def delete_by_id(self, uid: int) -> None:
+        db_session = get_db_session()
+        entity = Image.query.filter(Image.uid == uid).first()
+        db_session.delete(entity)
+        db_session.commit()
