@@ -27,14 +27,16 @@ class ImageRepo():
         return image
 
     def delete_all(self) -> None:
-        entities = Image.query.all()
-        for entity in entities:
-            db_session.delete(entity)
+        images = Image.query.all()
+        for image in images:
+            db_session.delete(image)
             db_session.commit()
 
     def delete_by_id(self, uid: int) -> None:
-        entity = Image.query.filter(Image.uid == uid).first()
-        db_session.delete(entity)
+        image = Image.query.filter(Image.uid == uid).first()
+        if not image:
+            raise NotFoundError(self.name)
+        db_session.delete(image)
         db_session.commit()
 
     def update_by_id(self, uid: int, name: str, path_original: str,
