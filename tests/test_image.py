@@ -1,3 +1,5 @@
+import random
+
 from tests.factories import ImageFactory
 
 
@@ -39,15 +41,23 @@ def test_add_image_failed_badrequest(client, session):
 
 
 def test_get_all_successed(client, session):
-    ImageFactory.create()
+    number = random.randint(0, 100)
+    ImageFactory.create_batch(number)
+
     response = client.get('/api/v1/image/')
     assert response.status_code == 200
+
+    recieved_images = response.json
+    assert len(recieved_images) == number
 
 
 def test_get_by_id_successed(client, session):
     image = ImageFactory.create()
     response = client.get(f'api/v1/image/{image.uid}')
     assert response.status_code == 200
+
+    recieved_image = response.json
+    assert recieved_image['name'] == image.name
 
 
 def test_get_by_id_failed_notfound(client, session):
