@@ -8,6 +8,15 @@
           "module": "backend",
           "envFile": "${workspaceFolder}/.env",
           "console": "internalConsole",
-      }
+      },
+      {
+        "name": "test",
+        "type": "python",
+        "request": "launch",
+        "args": ["-x"],
+        "module": "xyz",
+        "envFile": "${workspaceFolder}/.env",
+        "console": "internalConsole",
+    }
   ]
 }
