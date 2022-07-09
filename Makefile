@@ -10,7 +10,7 @@ lint:
 	@flake8 backend
 
 test:
-	@python -m pytest tests/
+	@python -m pytest -x tests/
 
 test.coverage:
 	@coverage run -m pytest
