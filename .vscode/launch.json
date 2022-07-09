@@ -14,7 +14,7 @@
         "type": "python",
         "request": "launch",
         "args": ["-x"],
-        "module": "xyz",
+        "module": "tests.run",
         "envFile": "${workspaceFolder}/.env",
         "console": "internalConsole",
     }
