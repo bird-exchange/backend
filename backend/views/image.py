@@ -3,10 +3,16 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from backend import schemas
-from backend.repos.images import ImageRepo
+from backend.config import config
+from backend.repos.image import ImageRepo
+from backend.repos.files import FilesRepo
 
 view = Blueprint('images', __name__)
 image_repo = ImageRepo()
+file_repo = FilesRepo()
+
+bucket_input = config.aws.bucket_input_images
+bucket_output = config.aws.bucket_output_images
 
 
 @view.post('/')
@@ -38,12 +44,17 @@ def get_by_id_image(uid: int):
 @view.delete('/')
 def delete_all_image():
     image_repo.delete_all()
+    file_repo.delete_all(bucket_input)
+    file_repo.delete_all(bucket_output)
     return {}, HTTPStatus.NO_CONTENT
 
 
 @view.delete('/<uid>')
 def delete_by_id_image(uid: int):
+    image = image_repo.get_by_id(uid)
     image_repo.delete_by_id(uid)
+    file_repo.delete_file_by_name(bucket_input, image.name)
+    file_repo.delete_file_by_name(bucket_output, image.name)
     return {}, HTTPStatus.NO_CONTENT
 
 
