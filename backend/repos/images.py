@@ -1,7 +1,8 @@
 from sqlalchemy.exc import IntegrityError
+
 from backend.db import db_session
-from backend.models import Image
 from backend.errors import ConflictError, NotFoundError
+from backend.models import Image
 
 
 class ImageRepo():
