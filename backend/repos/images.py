@@ -39,16 +39,13 @@ class ImageRepo():
         db_session.delete(image)
         db_session.commit()
 
-    def update_by_id(self, uid: int, name: str, path_original: str,
-                     path_result: str, type: int, was_fitted: int
+    def update_by_id(self, uid: int, name: str, type: int, was_fitted: int
                      ) -> Image:
         image = Image.query.filter(Image.uid == uid).first()
         if not image:
             raise NotFoundError(self.name)
         try:
             image.name = name
-            image.path_original = path_original
-            image.path_result = path_result
             image.type = type
             image.was_fitted = was_fitted
             db_session.commit()
