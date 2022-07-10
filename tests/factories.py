@@ -9,7 +9,5 @@ class ImageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     uid = factory.Sequence(lambda n: n)
     name = factory.Faker("name")
-    path_original = factory.Faker("email")
-    path_result = factory.Faker("email")
     type = 1
     was_fitted = 0

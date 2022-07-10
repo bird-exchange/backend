@@ -7,8 +7,6 @@ def test_add_image_successed(client, session):
     image_data = {
         "name": "test_image3",
         "type": 1,
-        "path_original": "test",
-        "path_result": "test",
         "was_fitted": 0
     }
     response = client.post('/api/v1/image/', json=image_data)
@@ -20,8 +18,6 @@ def test_add_image_failed_conflict(client, session):
     image_data = {
         "name": image.name,
         "type": 1,
-        "path_original": "test",
-        "path_result": "test",
         "was_fitted": 0
     }
     response = client.post('/api/v1/image/', json=image_data)
@@ -32,8 +28,6 @@ def test_add_image_failed_badrequest(client, session):
     image_data = {
         "image_name": "test_image",
         "type": 1,
-        "path_original": "test",
-        "path_result": "test",
         "was_fitted": 0
     }
     response = client.post('/api/v1/image/', json=image_data)
@@ -42,7 +36,8 @@ def test_add_image_failed_badrequest(client, session):
 
 def test_get_all_successed(client, session):
     number = random.randint(0, 100)
-    ImageFactory.create_batch(number)
+    for _ in range(number):
+        ImageFactory.create()
 
     response = client.get('/api/v1/image/')
     assert response.status_code == 200
