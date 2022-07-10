@@ -73,6 +73,17 @@ def upload_image():
     return f'{filename} successfully saved', HTTPStatus.CREATED
 
 
-@view.get('/<uid>')
-def get_link_to_image_by_id():
-    pass
+@view.get('/origin/<uid>')
+def get_presigned_url_origin_image_by_id(uid: int):
+    entity = image_repo.get_by_id(uid)
+    image = schemas.Image.from_orm(entity)
+    bucket_input = config.aws.bucket_input_images
+    return get_image_url(bucket_input, image.name)
+
+
+@view.get('/result/<uid>')
+def get_presigned_url_result_image_by_id(uid: int):
+    entity = image_repo.get_by_id(uid)
+    image = schemas.Image.from_orm(entity)
+    bucket_output = config.aws.bucket_output_images
+    return get_image_url(bucket_output, image.name)
