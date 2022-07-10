@@ -7,9 +7,15 @@ from backend.errors import ConflictError, NotFoundError
 class ImageRepo():
     name = "image"
 
-    def add_image(self, name: str, type: int) -> Image:
+    def add_image(self, uid: int, name: str, type: int, was_fitted: int
+                  ) -> Image:
+
         try:
-            new_image = Image(name=name, type=type)
+            new_image = Image(
+                name=name,
+                type=type,
+                was_fitted=was_fitted
+            )
             db_session.add(new_image)
             db_session.commit()
         except IntegrityError:
