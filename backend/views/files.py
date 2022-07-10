@@ -1,50 +1,27 @@
 from http import HTTPStatus
 from pathlib import Path
 
-from botocore.exceptions import ClientError
 from flask import Blueprint, request
 from werkzeug.utils import secure_filename
 
-from backend.aws import s3
-from backend.config import config
-from backend.errors import AppError, NotAcceptableError, RequestNotContainError
-from backend.repos.images import ImageRepo
 from backend import schemas
+from backend.config import config
+from backend.errors import NotAcceptableError, RequestNotContainError
+from backend.repos.files import FilesRepo
+from backend.repos.image import ImageRepo
 
 view = Blueprint('files', __name__)
 image_repo = ImageRepo()
+files_repo = FilesRepo()
 
 ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg'])
 
-
-def create_buckets(buckets: list[str]) -> None:
-    resp = s3.list_buckets()
-    existed_buckets = [bucket['Name'] for bucket in resp['Buckets']]
-    for bucket in buckets:
-        if bucket not in existed_buckets:
-            s3.create_bucket(Bucket=bucket)
-
-
-def upload_image_to_bucket(file, bucket_input: str, filename: str) -> None:
-    try:
-        s3.upload_fileobj(file, bucket_input, filename)
-    except ClientError:
-        raise AppError("Failed to save file", HTTPStatus.NOT_IMPLEMENTED)
-
-
-def get_image_url(bucket: str, filename: str) -> str:
-    try:
-        return s3.generate_presigned_url(
-            'get_object',
-            Params={'Bucket': bucket, 'Key': filename},
-            ExpiresIn=3600
-        )
-    except ClientError:
-        raise AppError("Failed to access file", HTTPStatus.NOT_FOUND)
+bucket_input = config.aws.bucket_input_images
+bucket_output = config.aws.bucket_output_images
 
 
 @view.post('/')
-def upload_image():
+def upload_file():
     if not ('file' in request.files):
         raise RequestNotContainError('file')
     file = request.files['file']
@@ -54,12 +31,9 @@ def upload_image():
     if not (Path(filename).suffix in ALLOWED_EXTENSIONS):
         raise NotAcceptableError('file format')
 
-    bucket_input = config.aws.bucket_input_images
-    bucket_output = config.aws.bucket_output_images
+    files_repo.create_buckets([bucket_input, bucket_output])
 
-    create_buckets([bucket_input, bucket_output])
-
-    upload_image_to_bucket(file, bucket_input, filename)
+    files_repo.upload_file_to_bucket(file, bucket_input, filename)
 
     image_data = {
         "uid": -1,
@@ -74,16 +48,14 @@ def upload_image():
 
 
 @view.get('/origin/<uid>')
-def get_presigned_url_origin_image_by_id(uid: int):
+def get_presigned_url_origin_file_by_id(uid: int):
     entity = image_repo.get_by_id(uid)
     image = schemas.Image.from_orm(entity)
-    bucket_input = config.aws.bucket_input_images
-    return get_image_url(bucket_input, image.name)
+    return files_repo.get_file_url(bucket_input, image.name)
 
 
 @view.get('/result/<uid>')
-def get_presigned_url_result_image_by_id(uid: int):
+def get_presigned_url_result_file_by_id(uid: int):
     entity = image_repo.get_by_id(uid)
     image = schemas.Image.from_orm(entity)
-    bucket_output = config.aws.bucket_output_images
-    return get_image_url(bucket_output, image.name)
+    return files_repo.get_file_url(bucket_output, image.name)
