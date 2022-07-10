@@ -3,10 +3,10 @@ from http import HTTPStatus
 from flask import Blueprint
 
 from backend import schemas
-from backend.repos.image import Image
+from backend.repos.image import ImageRepo
 
 view = Blueprint('task', __name__)
-image_repo = Image()
+image_repo = ImageRepo()
 
 
 @view.get('/')
