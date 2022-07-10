@@ -33,6 +33,12 @@ class ImageRepo():
             raise NotFoundError(self.name)
         return image
 
+    def get_not_recognized(self) -> Image:
+        image = Image.query.filter(Image.was_fitted == 0).first()
+        if not image:
+            raise NotFoundError(self.name)
+        return image
+
     def delete_all(self) -> None:
         images = Image.query.all()
         for image in images:
