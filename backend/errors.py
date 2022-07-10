@@ -18,3 +18,15 @@ class NotFoundError(AppError):
     def __init__(self, entity: str):
         super().__init__(f'cannot find {entity}', HTTPStatus.NOT_FOUND)
         self.entity = entity
+
+
+class RequestNotContainError(AppError):
+    def __init__(self, entity: str):
+        super().__init__(f'Request should contain {entity}', HTTPStatus.BAD_REQUEST)
+        self.entity = entity
+
+
+class NotAcceptableError(AppError):
+    def __init__(self, entity: str):
+        super().__init__(f'Request contain not acceptable {entity}', HTTPStatus.BAD_REQUEST)
+        self.entity = entity
