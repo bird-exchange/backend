@@ -15,7 +15,7 @@ def add_image():
     image_data['uid'] = -1
     image_data = schemas.Image(**image_data)
 
-    entity = image_repo.add_image(image_data.name, image_data.type)
+    entity = image_repo.add_image(**image_data.dict())
     new_image = schemas.Image.from_orm(entity)
 
     return new_image.dict(), HTTPStatus.CREATED
