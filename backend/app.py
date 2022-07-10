@@ -40,7 +40,7 @@ def create_app():
 
     app.register_blueprint(image.view, url_prefix='/api/v1/image')
     app.register_blueprint(task.view, url_prefix='/api/v1/task')
-    app.register_blueprint(files.view, url_prefix='/api/v1/upload')
+    app.register_blueprint(files.view, url_prefix='/api/v1/files')
     app.register_error_handler(HTTPException, handle_http_exceptions)
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)
