@@ -59,3 +59,21 @@ def get_presigned_url_result_file_by_id(uid: int):
     entity = image_repo.get_by_id(uid)
     image = schemas.Image.from_orm(entity)
     return files_repo.get_file_url(bucket_output, image.name)
+
+
+@view.post('/result/')
+def upload_result_file():
+    if not ('file' in request.files):
+        raise RequestNotContainError('file')
+    file = request.files['file']
+    if not file.filename:
+        raise RequestNotContainError('file')
+    filename = secure_filename(file.filename)
+    if not (Path(filename).suffix in ALLOWED_EXTENSIONS):
+        raise NotAcceptableError('file format')
+
+    files_repo.create_buckets([bucket_input, bucket_output])
+
+    files_repo.upload_file_to_bucket(file, bucket_output, filename)
+
+    return f'{filename} successfully saved', HTTPStatus.CREATED
