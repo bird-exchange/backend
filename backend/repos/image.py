@@ -27,6 +27,12 @@ class ImageRepo():
     def get_all(self) -> list[Image]:
         return Image.query.all()
 
+    def get_all_sparrow(self) -> list[Image]:
+        return Image.query.filter(Image.type == 2).all()
+
+    def get_all_tit(self) -> list[Image]:
+        return Image.query.filter(Image.type == 1).all()
+
     def get_by_id(self, uid: int) -> Image:
         image = Image.query.filter(Image.uid == uid).first()
         if not image:

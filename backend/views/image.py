@@ -29,7 +29,17 @@ def add_image():
 
 @view.get('/')
 def get_all_image():
-    entities = image_repo.get_all()
+    kind = request.args.get('kind')
+
+    if kind == 'sparrow':
+        entities = image_repo.get_all_sparrow()
+    elif kind == 'tit':
+        entities = image_repo.get_all_tit()
+    elif kind == 'all':
+        entities = image_repo.get_all()
+    else:
+        raise ValueError
+
     images = [schemas.Image.from_orm(entity).dict() for entity in entities]
     return jsonify(images), HTTPStatus.OK
 
