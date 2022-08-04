@@ -3,8 +3,8 @@ from sqlalchemy import Column, Integer, String
 from backend.db import Base
 
 
-class Image(Base):
-    __tablename__ = 'images'
+class Bird(Base):
+    __tablename__ = 'birds'
 
     uid = Column(Integer, primary_key=True)
     name = Column(String(), unique=True, nullable=False)

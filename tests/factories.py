@@ -1,11 +1,11 @@
 import factory
 
-from backend.models import Image
+from backend.models import Bird
 
 
-class ImageFactory(factory.alchemy.SQLAlchemyModelFactory):
+class BirdFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Image
+        model = Bird
 
     uid = factory.Sequence(lambda n: n)
     name = factory.Faker("name")

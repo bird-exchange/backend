@@ -8,7 +8,7 @@ class Schema(BaseModel):
         orm_mode = True
 
 
-class Image(Schema):
+class Bird(Schema):
     uid: int
     name: str
     type: int

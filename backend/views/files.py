@@ -8,10 +8,10 @@ from backend import schemas
 from backend.config import config
 from backend.errors import NotAcceptableError, RequestNotContainError
 from backend.repos.files import FilesRepo
-from backend.repos.image import ImageRepo
+from backend.repos.bird import BirdRepo
 
 view = Blueprint('files', __name__)
-image_repo = ImageRepo()
+bird_repo = BirdRepo()
 files_repo = FilesRepo()
 
 ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg'])
@@ -30,35 +30,43 @@ def upload_file():
     filename = secure_filename(file.filename)
     if not (Path(filename).suffix in ALLOWED_EXTENSIONS):
         raise NotAcceptableError('file format')
+    if not request.args['kind']:
+        raise RequestNotContainError('kind')
+
+    kind = request.args['kind']
+    if kind == 'sparrow':
+        type = 2
+    elif kind == 'tit':
+        type = 1
 
     files_repo.create_buckets([bucket_input, bucket_output])
 
     files_repo.upload_file_to_bucket(file, bucket_input, filename)
 
-    image_data = {
+    bird_data = {
         "uid": -1,
         "name": filename,
-        "type": 1,
+        "type": type,
         "was_fitted": 0
     }
-    image_data = schemas.Image(**image_data)
-    image_repo.add_image(**image_data.dict())
+    bird_data = schemas.Bird(**bird_data)
+    bird_repo.add_bird(**bird_data.dict())
 
     return f'{filename} successfully saved', HTTPStatus.CREATED
 
 
 @view.get('/origin/<uid>')
 def get_presigned_url_origin_file_by_id(uid: int):
-    entity = image_repo.get_by_id(uid)
-    image = schemas.Image.from_orm(entity)
-    return files_repo.get_file_url(bucket_input, image.name)
+    entity = bird_repo.get_by_id(uid)
+    bird = schemas.Bird.from_orm(entity)
+    return files_repo.get_file_url(bucket_input, bird.name)
 
 
 @view.get('/result/<uid>')
 def get_presigned_url_result_file_by_id(uid: int):
-    entity = image_repo.get_by_id(uid)
-    image = schemas.Image.from_orm(entity)
-    return files_repo.get_file_url(bucket_output, image.name)
+    entity = bird_repo.get_by_id(uid)
+    bird = schemas.Bird.from_orm(entity)
+    return files_repo.get_file_url(bucket_output, bird.name)
 
 
 @view.post('/result/')

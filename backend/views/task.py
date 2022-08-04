@@ -3,14 +3,14 @@ from http import HTTPStatus
 from flask import Blueprint
 
 from backend import schemas
-from backend.repos.image import ImageRepo
+from backend.repos.bird import BirdRepo
 
 view = Blueprint('task', __name__)
-image_repo = ImageRepo()
+bird_repo = BirdRepo()
 
 
 @view.get('/')
 def get_next_task():
-    entity = image_repo.get_not_recognized()
-    image = schemas.Image.from_orm(entity)
-    return image.dict(), HTTPStatus.OK
+    entity = bird_repo.get_not_recognized()
+    bird = schemas.Bird.from_orm(entity)
+    return bird.dict(), HTTPStatus.OK

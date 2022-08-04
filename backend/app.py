@@ -7,7 +7,7 @@ from werkzeug.exceptions import HTTPException
 from backend.config import config
 from backend.db import create_all, db_session
 from backend.errors import AppError
-from backend.views import files, image, task
+from backend.views import files, bird, task
 
 
 def handle_http_exceptions(error: HTTPException):
@@ -38,7 +38,7 @@ def create_app():
 
     create_all()
 
-    app.register_blueprint(image.view, url_prefix='/api/v1/image')
+    app.register_blueprint(bird.view, url_prefix='/api/v1/bird')
     app.register_blueprint(task.view, url_prefix='/api/v1/task')
     app.register_blueprint(files.view, url_prefix='/api/v1/files')
     app.register_error_handler(HTTPException, handle_http_exceptions)
