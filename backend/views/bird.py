@@ -5,11 +5,11 @@ from flask import Blueprint, jsonify, request
 from backend import schemas
 from backend.config import config
 from backend.repos.bird import BirdRepo
-from backend.repos.files import FilesRepo
+from backend.repos.image import ImageRepo
 
 view = Blueprint('birds', __name__)
 bird_repo = BirdRepo()
-file_repo = FilesRepo()
+image_repo = ImageRepo()
 
 bucket_input = config.aws.bucket_input_images
 bucket_output = config.aws.bucket_output_images
@@ -54,8 +54,8 @@ def get_by_id_bird(uid: int):
 @view.delete('/')
 def delete_all_bird():
     bird_repo.delete_all()
-    file_repo.delete_all(bucket_input)
-    file_repo.delete_all(bucket_output)
+    image_repo.delete_all(bucket_input)
+    image_repo.delete_all(bucket_output)
     return {}, HTTPStatus.NO_CONTENT
 
 
@@ -63,8 +63,8 @@ def delete_all_bird():
 def delete_by_id_bird(uid: int):
     bird = bird_repo.get_by_id(uid)
     bird_repo.delete_by_id(uid)
-    file_repo.delete_file_by_name(bucket_input, bird.name)
-    file_repo.delete_file_by_name(bucket_output, bird.name)
+    image_repo.delete_image_by_name(bucket_input, bird.name)
+    image_repo.delete_image_by_name(bucket_output, bird.name)
     return {}, HTTPStatus.NO_CONTENT
 
 

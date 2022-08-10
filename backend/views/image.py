@@ -7,12 +7,12 @@ from werkzeug.utils import secure_filename
 from backend import schemas
 from backend.config import config
 from backend.errors import NotAcceptableError, RequestNotContainError
-from backend.repos.files import FilesRepo
+from backend.repos.image import ImageRepo
 from backend.repos.bird import BirdRepo
 
-view = Blueprint('files', __name__)
+view = Blueprint('image', __name__)
 bird_repo = BirdRepo()
-files_repo = FilesRepo()
+image_repo = ImageRepo()
 
 ALLOWED_EXTENSIONS = set(['.png', '.jpg', '.jpeg'])
 
@@ -39,9 +39,9 @@ def upload_file():
     elif kind == 'tit':
         type = 1
 
-    files_repo.create_buckets([bucket_input, bucket_output])
+    image_repo.create_buckets([bucket_input, bucket_output])
 
-    files_repo.upload_file_to_bucket(file, bucket_input, filename)
+    image_repo.upload_file_to_bucket(file, bucket_input, filename)
 
     bird_data = {
         "uid": -1,
@@ -56,21 +56,21 @@ def upload_file():
 
 
 @view.get('/origin/<uid>')
-def get_presigned_url_origin_file_by_id(uid: int):
+def get_presigned_url_origin_image_by_id(uid: int):
     entity = bird_repo.get_by_id(uid)
     bird = schemas.Bird.from_orm(entity)
-    return files_repo.get_file_url(bucket_input, bird.name)
+    return image_repo.get_image_url(bucket_input, bird.name)
 
 
 @view.get('/result/<uid>')
-def get_presigned_url_result_file_by_id(uid: int):
+def get_presigned_url_result_image_by_id(uid: int):
     entity = bird_repo.get_by_id(uid)
     bird = schemas.Bird.from_orm(entity)
-    return files_repo.get_file_url(bucket_output, bird.name)
+    return image_repo.get_image_url(bucket_output, bird.name)
 
 
 @view.post('/result/')
-def upload_result_file():
+def upload_result_image():
     if not ('file' in request.files):
         raise RequestNotContainError('file')
     file = request.files['file']
@@ -80,8 +80,8 @@ def upload_result_file():
     if not (Path(filename).suffix in ALLOWED_EXTENSIONS):
         raise NotAcceptableError('file format')
 
-    files_repo.create_buckets([bucket_input, bucket_output])
+    image_repo.create_buckets([bucket_input, bucket_output])
 
-    files_repo.upload_file_to_bucket(file, bucket_output, filename)
+    image_repo.upload_file_to_bucket(file, bucket_output, filename)
 
     return f'{filename} successfully saved', HTTPStatus.CREATED

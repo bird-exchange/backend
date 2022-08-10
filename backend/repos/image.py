@@ -6,8 +6,8 @@ from backend.aws import s3_client, s3_resource
 from backend.errors import AppError
 
 
-class FilesRepo():
-    name = "file"
+class ImageRepo():
+    name = "image"
 
     def create_buckets(self, buckets: list[str]) -> None:
         resp = s3_client.list_buckets()
@@ -22,7 +22,7 @@ class FilesRepo():
         except ClientError:
             raise AppError(f"Failed to save {self.name}", HTTPStatus.NOT_IMPLEMENTED)
 
-    def get_file_url(self, bucket: str, filename: str) -> str:
+    def get_image_url(self, bucket: str, filename: str) -> str:
         try:
             return s3_client.generate_presigned_url(
                 'get_object',
@@ -32,7 +32,7 @@ class FilesRepo():
         except ClientError:
             raise AppError(f"Failed to access {self.name}", HTTPStatus.NOT_FOUND)
 
-    def delete_file_by_name(self, bucket: str, filename: str):
+    def delete_image_by_name(self, bucket: str, filename: str):
         try:
             s3_client.delete_object(Bucket=bucket, Key=filename)
         except ClientError:
