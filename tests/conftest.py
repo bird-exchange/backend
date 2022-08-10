@@ -2,7 +2,7 @@ import pytest
 
 from backend.app import create_app
 from backend.db import db_session, drop_all, engine
-from tests.factories import ImageFactory
+from tests.factories import BirdFactory
 
 
 @pytest.fixture
@@ -25,7 +25,7 @@ def session(app):
 
     session = db_session()
 
-    ImageFactory._meta.sqlalchemy_session = session
+    BirdFactory._meta.sqlalchemy_session = session
 
     yield session
 

@@ -39,7 +39,7 @@ def test_get_all_successed(client, session):
     for _ in range(number):
         BirdFactory.create()
 
-    response = client.get('/api/v1/bird/')
+    response = client.get('/api/v1/bird/?kind=all')
     assert response.status_code == 200
 
     recieved_birds = response.json
