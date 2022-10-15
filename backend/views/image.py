@@ -66,7 +66,9 @@ def get_presigned_url_origin_image_by_id(uid: int):
 def get_presigned_url_result_image_by_id(uid: int):
     entity = bird_repo.get_by_id(uid)
     bird = schemas.Bird.from_orm(entity)
-    return image_repo.get_image_url(bucket_output, bird.name)
+    if bird.was_fitted:
+        return image_repo.get_image_url(bucket_output, bird.name)
+    return ''
 
 
 @view.post('/result/')
