@@ -55,22 +55,6 @@ def upload_file():
     return f'{filename} successfully saved', HTTPStatus.CREATED
 
 
-@view.get('/origin/<uid>')
-def get_presigned_url_origin_image_by_id(uid: int):
-    entity = bird_repo.get_by_id(uid)
-    bird = schemas.Bird.from_orm(entity)
-    return image_repo.get_image_url(bucket_input, bird.name)
-
-
-@view.get('/result/<uid>')
-def get_presigned_url_result_image_by_id(uid: int):
-    entity = bird_repo.get_by_id(uid)
-    bird = schemas.Bird.from_orm(entity)
-    if bird.was_fitted:
-        return image_repo.get_image_url(bucket_output, bird.name)
-    return ''
-
-
 @view.post('/result/')
 def upload_result_image():
     if not ('file' in request.files):

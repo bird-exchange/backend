@@ -22,16 +22,6 @@ class ImageRepo():
         except ClientError:
             raise AppError(f"Failed to save {self.name}", HTTPStatus.NOT_IMPLEMENTED)
 
-    def get_image_url(self, bucket: str, filename: str) -> str:
-        try:
-            return s3_client.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': bucket, 'Key': filename},
-                ExpiresIn=3600
-            )
-        except ClientError:
-            raise AppError(f"Failed to access {self.name}", HTTPStatus.NOT_FOUND)
-
     def delete_image_by_name(self, bucket: str, filename: str):
         try:
             s3_client.delete_object(Bucket=bucket, Key=filename)
