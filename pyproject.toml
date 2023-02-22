@@ -7,8 +7,6 @@ authors = ["ProtKsen <protcenko.kseniya@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^1.9.1"
-mypy = "^0.961"
-flake8 = "^4.0.1"
 Flask = "^2.1.2"
 pytest = "^7.1.2"
 coverage = "^6.4.1"
@@ -19,6 +17,8 @@ factory-boy = "^3.2.1"
 boto3 = "^1.24.26"
 
 [tool.poetry.dev-dependencies]
+mypy = "^0.961"
+flake8 = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
