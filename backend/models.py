@@ -12,7 +12,7 @@ class Bird(Base):
     was_fitted = Column(Integer, default=0)
 
     def __str__(self) -> str:
-        return 'Image {uid}, {name}'.format(
+        return 'Bird {uid}, {name}'.format(
             uid=self.uid,
             name=self.name,
         )
