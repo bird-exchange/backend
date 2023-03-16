@@ -1,13 +1,14 @@
 -include .env
 export
 
-dev.install:
-	@poetry install
+app.run:
+	@python -m backend
 
+db.run:
+	@docker-compose up -d db
 
-lint:
-	@mypy backend
-	@flake8 backend
+minio.run:
+	@docker-compose up -d minio
 
 test:
 	@python -m pytest -x tests/
